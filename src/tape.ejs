@@ -1,0 +1,26 @@
+var path = require("path");
+
+/**
+ * <%- req.method %> <%- decodeURIComponent(req.path) %>
+ *
+<% Object.keys(req._headers).forEach(function (key) { -%>
+ * <%- key %>: <%- req._headers[key] %>
+<% }); -%>
+ */
+
+module.exports = function (req, res) {
+  res.statusCode = <%- JSON.stringify(res.statusCode) %>;
+
+<% Object.keys(res.headers).forEach(function (key) { -%>
+  res.setHeader(<%- JSON.stringify(key) %>, <%- JSON.stringify(res.headers[key]) %>);
+<% }); -%>
+
+  res.setHeader("x-yakbak-tape", path.basename(__filename, ".js"));
+
+<% body.forEach(function (data) { -%>
+  res.write(new Buffer(<%- JSON.stringify(data.toString('base64')) %>, "base64"));
+<% }); -%>
+  res.end();
+
+  return __filename;
+};
