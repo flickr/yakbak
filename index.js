@@ -8,7 +8,7 @@ var path = require('path');
 var buffer = require('./lib/buffer');
 var proxy = require('./lib/proxy');
 var record = require('./lib/record');
-var debug = require('debug')('yakbak');
+var debug = require('debug')('yakbak:server');
 
 /**
  * Returns a new yakbak proxy middleware.
@@ -23,6 +23,8 @@ module.exports = function (host, opts) {
 
   return function (req, res) {
     mkdirp.sync(opts.dirname);
+
+    debug('req', req.url);
 
     buffer(req).then(function (body) {
       req.body = body;
