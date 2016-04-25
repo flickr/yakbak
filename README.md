@@ -2,6 +2,8 @@
 
 Record HTTP interactions The Node Way™. Inspired by ruby's [vcr][1].
 
+> [![Build Status](https://travis-ci.org/flickr/yakbak.svg?branch=master)](https://travis-ci.org/flickr/yakbak)
+
 ## install
 
 ``` bash
