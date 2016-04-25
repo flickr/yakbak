@@ -1,6 +1,7 @@
 // Copyright 2016 Yahoo Inc.
 // Licensed under the terms of the MIT license. Please see LICENSE file in the project root for terms.
 
+var Promise = require('bluebird');
 var hash = require('incoming-message-hash');
 var assert = require('assert');
 var mkdirp = require('mkdirp');
@@ -27,17 +28,17 @@ module.exports = function (host, opts) {
     debug('req', req.url);
 
     buffer(req).then(function (body) {
-      req.body = body;
-      req.hash = hash.sync(req, Buffer.concat(req.body));
-      req.path = path.join(opts.dirname, req.hash + '.js');
+      var tape = hash.sync(req, Buffer.concat(body));
+      var file = path.join(opts.dirname, tape + '.js');
 
-      return require.resolve(req.path);
-    }).catch(function (err) {
-      return err.code === 'MODULE_NOT_FOUND';
-    }, function (err) {
-      return proxy(req, req.body, host).then(function (res) {
-        return record(res.req, res, req.path);
+      return Promise.try(function () {
+        return require.resolve(file);
+      }).catch(ModuleNotFoundError, function (err) {
+        return proxy(req, body, host).then(function (res) {
+          return record(res.req, res, file);
+        });
       });
+
     }).then(function (file) {
       return require(file);
     }).then(function (tape) {
@@ -46,3 +47,13 @@ module.exports = function (host, opts) {
 
   };
 };
+
+/**
+ * Bluebird error predicate for matching module not found errors.
+ * @param {Error} err
+ * @returns {Boolean}
+ */
+
+function ModuleNotFoundError(err) {
+  return err.code === 'MODULE_NOT_FOUND';
+}
