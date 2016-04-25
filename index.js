@@ -40,8 +40,7 @@ module.exports = function (host, opts) {
       return require(file);
     }).then(function (tape) {
       return tape(req, res);
-    }).catch(function (err) {
-      console.log('GOT ERROR', err.stack);
     });
+
   };
 };
