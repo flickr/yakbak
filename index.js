@@ -28,8 +28,7 @@ module.exports = function (host, opts) {
     debug('req', req.url);
 
     buffer(req).then(function (body) {
-      var tape = hash.sync(req, Buffer.concat(body));
-      var file = path.join(opts.dirname, tape + '.js');
+      var file = path.join(opts.dirname, tapename(req, body));
 
       return Promise.try(function () {
         return require.resolve(file);
@@ -46,7 +45,19 @@ module.exports = function (host, opts) {
     });
 
   };
+
 };
+
+/**
+ * Returns the tape name for `req`.
+ * @param {http.IncomingMessage} req
+ * @param {Array.<Buffer>} body
+ * @returns {String}
+ */
+
+function tapename(req, body) {
+  return hash.sync(req, Buffer.concat(body)) + '.js';
+}
 
 /**
  * Bluebird error predicate for matching module not found errors.
