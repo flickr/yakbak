@@ -28,7 +28,7 @@ beforeEach(function (done) {
 });
 
 beforeEach(function () {
-  this.addr = this.server.address().address;
+  this.addr = 'localhost';
   this.port = this.server.address().port;
 
   this.host = 'http://' + this.addr + ':' + this.port;
