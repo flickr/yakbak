@@ -37,3 +37,20 @@ beforeEach(function () {
 afterEach(function (done) {
   this.server.close(done);
 });
+
+var tmpdir = require('os-tmpdir');
+var mkdirp = require('mkdirp');
+var rimraf = require('rimraf');
+var path = require('path');
+
+beforeEach(function () {
+  this.tmpdir = path.join(tmpdir(), String(Date.now()));
+});
+
+beforeEach(function (done) {
+  mkdirp(this.tmpdir, done);
+});
+
+afterEach(function (done) {
+  rimraf(this.tmpdir, done);
+});

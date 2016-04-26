@@ -24,7 +24,8 @@
   "license": "MIT",
   "devDependencies": {
     "mocha": "~2.3.4",
-    "mock-fs": "~3.5.0",
+    "os-tmpdir": "^1.0.1",
+    "rimraf": "^2.5.2",
     "semver": "^5.1.0",
     "supertest": "~0.15.0"
   },

@@ -3,7 +3,6 @@
 
 var subject = require('../lib/record');
 var assert = require('assert');
-var mock = require('mock-fs');
 var http = require('http');
 var fs = require('fs');
 
@@ -21,18 +20,12 @@ describe('record', function () {
     req.setHeader('Connection', 'close');
   });
 
-  beforeEach(function () {
-    mock({ '/tapes': {} });
-  });
-
-  afterEach(function () {
-    mock.restore();
-  });
-
   it('returns the filename', function (done) {
+    var tmpdir = this.tmpdir;
+
     req.on('response', function (res) {
-      subject(req, res, '/tapes/foo.js').then(function (filename) {
-        assert.equal(filename, '/tapes/foo.js');
+      subject(req, res, tmpdir + '/foo.js').then(function (filename) {
+        assert.equal(filename, tmpdir + '/foo.js');
         done();
       }).catch(function (err) {
         done(err);
@@ -43,13 +36,14 @@ describe('record', function () {
   });
 
   it('records the response to disk', function (done) {
+    var tmpdir = this.tmpdir;
     var addr = this.addr;
     var port = this.port;
 
     var expected = fixture.replace('{addr}', addr).replace('{port}', port);
 
     req.on('response', function (res) {
-      subject(req, res, '/tapes/foo.js').then(function (filename) {
+      subject(req, res, tmpdir + '/foo.js').then(function (filename) {
         assert.equal(fs.readFileSync(filename, 'utf8'), expected);
         done();
       }).catch(function (err) {

@@ -4,24 +4,15 @@
 var subject = require('..');
 var request = require('supertest');
 var assert = require('assert');
-var mock = require('mock-fs');
 var fs = require('fs');
 
 var yakbak;
 
 beforeEach(function () {
-  yakbak = subject(this.host, { dirname: '/tapes' });
+  yakbak = subject(this.host, { dirname: this.tmpdir });
 });
 
 describe('record', function () {
-
-  beforeEach(function () {
-    mock({ '/tapes': {} });
-  });
-
-  afterEach(function () {
-    mock.restore();
-  });
 
   it('proxies the request to the server', function (done) {
     var server = this.server;
@@ -40,6 +31,8 @@ describe('record', function () {
   });
 
   it('writes the tape to disk', function (done) {
+    var tmpdir = this.tmpdir;
+
     request(yakbak)
     .get('/record/2')
     .set('host', 'localhost:3001')
@@ -48,7 +41,7 @@ describe('record', function () {
     .expect(201, 'OK')
     .end(function (err) {
       assert.ifError(err);
-      assert(fs.existsSync('/tapes/3234ee470c8605a1837e08f218494326.js'));
+      assert(fs.existsSync(tmpdir + '/3234ee470c8605a1837e08f218494326.js'));
       done();
     });
   });
@@ -57,23 +50,20 @@ describe('record', function () {
 
 describe('playback', function () {
 
-  beforeEach(function () {
-    mock({
-      '/tapes/305c77b0a3ad7632e51c717408d8be0f.js': [
-        'var path = require("path");',
-        'module.exports = function (req, res) {',
-        '  res.statusCode = 201;',
-        '  res.setHeader("content-type", "text/html")',
-        '  res.setHeader("x-yakbak-tape", path.basename(__filename, ".js"));',
-        '  res.end("YAY");',
-        '}',
-        ''
-      ].join('\n')
-    });
-  });
+  beforeEach(function (done) {
+    var file = '305c77b0a3ad7632e51c717408d8be0f.js';
+    var tape = [
+      'var path = require("path");',
+      'module.exports = function (req, res) {',
+      '  res.statusCode = 201;',
+      '  res.setHeader("content-type", "text/html")',
+      '  res.setHeader("x-yakbak-tape", path.basename(__filename, ".js"));',
+      '  res.end("YAY");',
+      '}',
+      ''
+    ].join('\n');
 
-  afterEach(function () {
-    mock.restore();
+    fs.writeFile(this.tmpdir + '/' + file, tape, done);
   });
 
   it('does not make a request to the server', function (done) {
