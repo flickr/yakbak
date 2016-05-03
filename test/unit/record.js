@@ -1,12 +1,12 @@
 // Copyright 2016 Yahoo Inc.
 // Licensed under the terms of the MIT license. Please see LICENSE file in the project root for terms.
 
-var subject = require('../lib/record');
+var subject = require('../../lib/record');
 var assert = require('assert');
 var http = require('http');
 var fs = require('fs');
 
-var fixture = require('./fixtures');
+var fixture = require('../fixtures');
 
 describe('record', function () {
   var req;
