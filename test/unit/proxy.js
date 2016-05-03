@@ -1,7 +1,7 @@
 // Copyright 2016 Yahoo Inc.
 // Licensed under the terms of the MIT license. Please see LICENSE file in the project root for terms.
 
-var subject = require('../lib/proxy');
+var subject = require('../../lib/proxy');
 var assert = require('assert');
 var http = require('http');
 

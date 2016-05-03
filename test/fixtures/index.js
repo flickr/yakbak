@@ -5,7 +5,7 @@ var semver = require('semver');
 var path = require('path');
 var fs = require('fs');
 
-function read(file) {
+function readTape(file) {
   return fs.readFileSync(path.join(__dirname, file + '.js'), 'utf8');
 }
 
@@ -15,8 +15,7 @@ function read(file) {
  */
 
 if (semver.gte(process.version, '1.5.0')) {
-  console
-  module.exports = read('v1.5.0');
+  module.exports = readTape('v1.5.0');
 } else {
-  module.exports = read('v0.10.x');
+  module.exports = readTape('v0.10.x');
 }
