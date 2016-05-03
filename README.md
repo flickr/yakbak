@@ -109,10 +109,14 @@ Server listening on port 3000
 * Connection closed
 ```
 
-[1]: https://github.com/vcr/vcr
+## why not [insert other project here]?
+
+Check out [this blog post][2] about why we chose a reverse proxy over other existing approaches to recording HTTP interactions.
 
 ## license
 
 This software is free to use under the MIT license. See the [LICENSE][] file for license text and copyright information.
 
+[1]: https://github.com/vcr/vcr
+[2]: http://code.flickr.net/2016/04/25/introducing-yakbak-record-and-playback-http-interactions-in-nodejs/
 [LICENSE]: https://github.com/flickr/yakbak/blob/master/LICENSE
