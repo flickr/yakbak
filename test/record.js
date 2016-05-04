@@ -2,6 +2,7 @@
 // Licensed under the terms of the MIT license. Please see LICENSE file in the project root for terms.
 
 var subject = require('../lib/record');
+var createServer = require('./helpers/server');
 var assert = require('assert');
 var http = require('http');
 var fs = require('fs');
@@ -9,12 +10,20 @@ var fs = require('fs');
 var fixture = require('./fixtures');
 
 describe('record', function () {
-  var req;
+  var server, req;
+
+  beforeEach(function (done) {
+    server = createServer(done);
+  });
+
+  afterEach(function (done) {
+    server.teardown(done);
+  });
 
   beforeEach(function () {
     req = http.request({
-      host: this.server.addr,
-      port: this.server.port,
+      host: server.addr,
+      port: server.port,
     });
     req.setHeader('User-Agent', 'My User Agent/1.0')
     req.setHeader('Connection', 'close');
@@ -37,10 +46,8 @@ describe('record', function () {
 
   it('records the response to disk', function (done) {
     var tmpdir = this.tmpdir;
-    var addr = this.server.addr;
-    var port = this.server.port;
 
-    var expected = fixture.replace('{addr}', addr).replace('{port}', port);
+    var expected = fixture.replace('{addr}', server.addr).replace('{port}', server.port);
 
     req.on('response', function (res) {
       subject(req, res, tmpdir + '/foo.js').then(function (filename) {

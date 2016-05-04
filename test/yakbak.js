@@ -2,20 +2,27 @@
 // Licensed under the terms of the MIT license. Please see LICENSE file in the project root for terms.
 
 var subject = require('..');
+var createServer = require('./helpers/server');
 var request = require('supertest');
 var assert = require('assert');
 var fs = require('fs');
 
 describe('record', function () {
-  var yakbak;
+  var server, yakbak;
+
+  beforeEach(function (done) {
+    server = createServer(done);
+  });
+
+  afterEach(function (done) {
+    server.teardown(done);
+  });
 
   beforeEach(function () {
-    yakbak = subject(this.server.host, { dirname: this.tmpdir });
+    yakbak = subject(server.host, { dirname: this.tmpdir });
   });
 
   it('proxies the request to the server', function (done) {
-    var server = this.server;
-
     request(yakbak)
     .get('/record/1')
     .set('host', 'localhost:3001')
@@ -48,10 +55,18 @@ describe('record', function () {
 });
 
 describe('playback', function () {
-  var yakbak;
+  var server, yakbak;
+
+  beforeEach(function (done) {
+    server = createServer(done);
+  });
+
+  afterEach(function (done) {
+    server.teardown(done);
+  });
 
   beforeEach(function () {
-    yakbak = subject(this.server.host, { dirname: this.tmpdir });
+    yakbak = subject(server.host, { dirname: this.tmpdir });
   });
 
   beforeEach(function (done) {
@@ -71,8 +86,6 @@ describe('playback', function () {
   });
 
   it('does not make a request to the server', function (done) {
-    var server = this.server;
-
     request(yakbak)
     .get('/playback/1')
     .set('host', 'localhost:3001')
