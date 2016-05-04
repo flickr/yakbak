@@ -2,6 +2,8 @@
 // Licensed under the terms of the MIT license. Please see LICENSE file in the project root for terms.
 
 var subject = require('../lib/record');
+var createServer = require('./helpers/server');
+var createTmpdir = require('./helpers/tmpdir');
 var assert = require('assert');
 var http = require('http');
 var fs = require('fs');
@@ -9,23 +11,37 @@ var fs = require('fs');
 var fixture = require('./fixtures');
 
 describe('record', function () {
-  var req;
+  var server, tmpdir, req;
+
+  beforeEach(function (done) {
+    server = createServer(done);
+  });
+
+  afterEach(function (done) {
+    server.teardown(done);
+  });
+
+  beforeEach(function (done) {
+    tmpdir = createTmpdir(done);
+  });
+
+  afterEach(function (done) {
+    tmpdir.teardown(done);
+  });
 
   beforeEach(function () {
     req = http.request({
-      host: this.addr,
-      port: this.port,
+      host: server.addr,
+      port: server.port,
     });
     req.setHeader('User-Agent', 'My User Agent/1.0')
     req.setHeader('Connection', 'close');
   });
 
   it('returns the filename', function (done) {
-    var tmpdir = this.tmpdir;
-
     req.on('response', function (res) {
-      subject(req, res, tmpdir + '/foo.js').then(function (filename) {
-        assert.equal(filename, tmpdir + '/foo.js');
+      subject(req, res, tmpdir.join('foo.js')).then(function (filename) {
+        assert.equal(filename, tmpdir.join('foo.js'));
         done();
       }).catch(function (err) {
         done(err);
@@ -36,14 +52,10 @@ describe('record', function () {
   });
 
   it('records the response to disk', function (done) {
-    var tmpdir = this.tmpdir;
-    var addr = this.addr;
-    var port = this.port;
-
-    var expected = fixture.replace('{addr}', addr).replace('{port}', port);
+    var expected = fixture.replace('{addr}', server.addr).replace('{port}', server.port);
 
     req.on('response', function (res) {
-      subject(req, res, tmpdir + '/foo.js').then(function (filename) {
+      subject(req, res, tmpdir.join('foo.js')).then(function (filename) {
         assert.equal(fs.readFileSync(filename, 'utf8'), expected);
         done();
       }).catch(function (err) {

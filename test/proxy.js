@@ -2,11 +2,20 @@
 // Licensed under the terms of the MIT license. Please see LICENSE file in the project root for terms.
 
 var subject = require('../lib/proxy');
+var createServer = require('./helpers/server');
 var assert = require('assert');
 var http = require('http');
 
 describe('proxy', function () {
-  var req;
+  var server, req;
+
+  beforeEach(function (done) {
+    server = createServer(done);
+  });
+
+  afterEach(function (done) {
+    server.teardown(done);
+  });
 
   beforeEach(function () {
     req        = new http.IncomingMessage;
@@ -16,17 +25,14 @@ describe('proxy', function () {
   });
 
   it('proxies the request', function (done) {
-    var addr = this.addr;
-    var port = this.port;
-
-    this.server.once('request', function (preq) {
+    server.once('request', function (preq) {
       assert.equal(preq.method, req.method);
       assert.equal(preq.url, req.url);
-      assert.equal(preq.headers.host, addr + ':' + port);
+      assert.equal(preq.headers.host, server.addr + ':' + server.port);
       done();
     });
 
-    subject(req, [], this.host).catch(function (err) {
+    subject(req, [], server.host).catch(function (err) {
       done(err);
     });
   });
@@ -38,7 +44,7 @@ describe('proxy', function () {
       new Buffer('c')
     ];
 
-    this.server.once('request', function (req) {
+    server.once('request', function (req) {
       var data = [];
 
       req.on('data', function (buf) {
@@ -53,13 +59,13 @@ describe('proxy', function () {
 
     req.method = 'POST';
 
-    subject(req, body, this.host).catch(function (err) {
+    subject(req, body, server.host).catch(function (err) {
       done(err);
     });
   });
 
   it('yields the response', function (done) {
-    subject(req, [], this.host).then(function (res) {
+    subject(req, [], server.host).then(function (res) {
       assert.equal(res.statusCode, 201);
       done();
     }).catch(function (err) {
