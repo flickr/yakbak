@@ -16,8 +16,8 @@ describe('proxy', function () {
   });
 
   it('proxies the request', function (done) {
-    var addr = this.addr;
-    var port = this.port;
+    var addr = this.server.addr;
+    var port = this.server.port;
 
     this.server.once('request', function (preq) {
       assert.equal(preq.method, req.method);
@@ -26,7 +26,7 @@ describe('proxy', function () {
       done();
     });
 
-    subject(req, [], this.host).catch(function (err) {
+    subject(req, [], this.server.host).catch(function (err) {
       done(err);
     });
   });
@@ -53,13 +53,13 @@ describe('proxy', function () {
 
     req.method = 'POST';
 
-    subject(req, body, this.host).catch(function (err) {
+    subject(req, body, this.server.host).catch(function (err) {
       done(err);
     });
   });
 
   it('yields the response', function (done) {
-    subject(req, [], this.host).then(function (res) {
+    subject(req, [], this.server.host).then(function (res) {
       assert.equal(res.statusCode, 201);
       done();
     }).catch(function (err) {

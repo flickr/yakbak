@@ -19,19 +19,17 @@ beforeEach(function (done) {
     });
 
   }).on('listening', function () {
+    this.addr = 'localhost';
+    this.port = this.address().port;
+
+    this.host = 'http://' + this.addr + ':' + this.port;
+  }).on('listening', function () {
     this.requests = [];
   }).on('close', function () {
     this.requests = [];
   }).on('request', function (req) {
     this.requests.push(req);
   }).listen(done);
-});
-
-beforeEach(function () {
-  this.addr = 'localhost';
-  this.port = this.server.address().port;
-
-  this.host = 'http://' + this.addr + ':' + this.port;
 });
 
 afterEach(function (done) {

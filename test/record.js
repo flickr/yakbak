@@ -13,8 +13,8 @@ describe('record', function () {
 
   beforeEach(function () {
     req = http.request({
-      host: this.addr,
-      port: this.port,
+      host: this.server.addr,
+      port: this.server.port,
     });
     req.setHeader('User-Agent', 'My User Agent/1.0')
     req.setHeader('Connection', 'close');
@@ -37,8 +37,8 @@ describe('record', function () {
 
   it('records the response to disk', function (done) {
     var tmpdir = this.tmpdir;
-    var addr = this.addr;
-    var port = this.port;
+    var addr = this.server.addr;
+    var port = this.server.port;
 
     var expected = fixture.replace('{addr}', addr).replace('{port}', port);
 

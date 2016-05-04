@@ -10,7 +10,7 @@ describe('record', function () {
   var yakbak;
 
   beforeEach(function () {
-    yakbak = subject(this.host, { dirname: this.tmpdir });
+    yakbak = subject(this.server.host, { dirname: this.tmpdir });
   });
 
   it('proxies the request to the server', function (done) {
@@ -51,7 +51,7 @@ describe('playback', function () {
   var yakbak;
 
   beforeEach(function () {
-    yakbak = subject(this.host, { dirname: this.tmpdir });
+    yakbak = subject(this.server.host, { dirname: this.tmpdir });
   });
 
   beforeEach(function (done) {
