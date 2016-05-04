@@ -6,13 +6,12 @@ var request = require('supertest');
 var assert = require('assert');
 var fs = require('fs');
 
-var yakbak;
-
-beforeEach(function () {
-  yakbak = subject(this.host, { dirname: this.tmpdir });
-});
-
 describe('record', function () {
+  var yakbak;
+
+  beforeEach(function () {
+    yakbak = subject(this.host, { dirname: this.tmpdir });
+  });
 
   it('proxies the request to the server', function (done) {
     var server = this.server;
@@ -49,6 +48,11 @@ describe('record', function () {
 });
 
 describe('playback', function () {
+  var yakbak;
+
+  beforeEach(function () {
+    yakbak = subject(this.host, { dirname: this.tmpdir });
+  });
 
   beforeEach(function (done) {
     var file = '305c77b0a3ad7632e51c717408d8be0f.js';
