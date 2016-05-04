@@ -3,12 +3,13 @@
 
 var subject = require('..');
 var createServer = require('./helpers/server');
+var createTmpdir = require('./helpers/tmpdir');
 var request = require('supertest');
 var assert = require('assert');
 var fs = require('fs');
 
 describe('record', function () {
-  var server, yakbak;
+  var server, tmpdir, yakbak;
 
   beforeEach(function (done) {
     server = createServer(done);
@@ -18,8 +19,16 @@ describe('record', function () {
     server.teardown(done);
   });
 
+  beforeEach(function (done) {
+    tmpdir = createTmpdir(done);
+  });
+
+  afterEach(function (done) {
+    tmpdir.teardown(done);
+  });
+
   beforeEach(function () {
-    yakbak = subject(server.host, { dirname: this.tmpdir });
+    yakbak = subject(server.host, { dirname: tmpdir.dirname });
   });
 
   it('proxies the request to the server', function (done) {
@@ -37,8 +46,6 @@ describe('record', function () {
   });
 
   it('writes the tape to disk', function (done) {
-    var tmpdir = this.tmpdir;
-
     request(yakbak)
     .get('/record/2')
     .set('host', 'localhost:3001')
@@ -47,7 +54,7 @@ describe('record', function () {
     .expect(201, 'OK')
     .end(function (err) {
       assert.ifError(err);
-      assert(fs.existsSync(tmpdir + '/3234ee470c8605a1837e08f218494326.js'));
+      assert(fs.existsSync(tmpdir.join('3234ee470c8605a1837e08f218494326.js')));
       done();
     });
   });
@@ -55,7 +62,7 @@ describe('record', function () {
 });
 
 describe('playback', function () {
-  var server, yakbak;
+  var server, tmpdir, yakbak;
 
   beforeEach(function (done) {
     server = createServer(done);
@@ -65,8 +72,16 @@ describe('playback', function () {
     server.teardown(done);
   });
 
+  beforeEach(function (done) {
+    tmpdir = createTmpdir(done);
+  });
+
+  afterEach(function (done) {
+    tmpdir.teardown(done);
+  });
+
   beforeEach(function () {
-    yakbak = subject(server.host, { dirname: this.tmpdir });
+    yakbak = subject(server.host, { dirname: tmpdir.dirname });
   });
 
   beforeEach(function (done) {
@@ -82,7 +97,7 @@ describe('playback', function () {
       ''
     ].join('\n');
 
-    fs.writeFile(this.tmpdir + '/' + file, tape, done);
+    fs.writeFile(tmpdir.join(file), tape, done);
   });
 
   it('does not make a request to the server', function (done) {
