@@ -27,7 +27,7 @@ module.exports = function (host, opts) {
 
     debug('req', req.url);
 
-    buffer(req).then(function (body) {
+    return buffer(req).then(function (body) {
       var file = path.join(opts.dirname, tapename(req, body));
 
       return Promise.try(function () {
