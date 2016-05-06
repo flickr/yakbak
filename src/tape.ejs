@@ -4,7 +4,7 @@ var path = require("path");
  * <%- req.method %> <%- decodeURIComponent(req.path) %>
  *
 <% Object.keys(req._headers).forEach(function (key) { -%>
- * <%- key %>: <%- req._headers[key] %>
+ * <%- key %>: <%- req._headers[key].replace('/*', '/ *').replace('*/', '* /') %>
 <% }); -%>
  */
 
