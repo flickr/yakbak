@@ -1,6 +1,6 @@
 {
   "name": "yakbak",
-  "version": "2.4.1",
+  "version": "2.4.2",
   "description": "Record and playback HTTP responses",
   "main": "index.js",
   "scripts": {
