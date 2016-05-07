@@ -1,6 +1,8 @@
 // Copyright 2016 Yahoo Inc.
 // Licensed under the terms of the MIT license. Please see LICENSE file in the project root for terms.
 
+/* eslint-env mocha */
+
 var subject = require('../lib/record');
 var createServer = require('./helpers/server');
 var createTmpdir = require('./helpers/tmpdir');
@@ -32,7 +34,7 @@ describe('record', function () {
   beforeEach(function () {
     req = http.request({
       host: server.addr,
-      port: server.port,
+      port: server.port
     });
     req.setHeader('User-Agent', 'My User Agent/1.0')
     req.setHeader('Connection', 'close');

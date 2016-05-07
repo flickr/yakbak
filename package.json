@@ -4,6 +4,7 @@
   "description": "Record and playback HTTP responses",
   "main": "index.js",
   "scripts": {
+    "lint": "eslint cli.js index.js lib test",
     "test": "mocha"
   },
   "keywords": [
@@ -23,6 +24,7 @@
   "author": "Jeremy Ruppel",
   "license": "MIT",
   "devDependencies": {
+    "eslint": "^2.9.0",
     "mocha": "~2.3.4",
     "os-tmpdir": "^1.0.1",
     "rimraf": "^2.5.2",

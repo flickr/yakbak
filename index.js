@@ -32,7 +32,7 @@ module.exports = function (host, opts) {
 
       return Promise.try(function () {
         return require.resolve(file);
-      }).catch(ModuleNotFoundError, function (err) {
+      }).catch(ModuleNotFoundError, function (/* err */) {
         return proxy(req, body, host).then(function (res) {
           return record(res.req, res, file);
         });

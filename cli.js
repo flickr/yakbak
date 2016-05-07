@@ -3,6 +3,8 @@
 // Copyright 2016 Yahoo Inc.
 // Licensed under the terms of the MIT license. Please see LICENSE file in the project root for terms.
 
+/* eslint no-console:"off" */
+
 var http = require('http');
 var path = require('path');
 var PORT = 3000;

@@ -17,9 +17,7 @@ module.exports = function createServer(done) {
     res.setHeader('Content-Type', 'text/html');
     res.setHeader('Date', 'Sat, 26 Oct 1985 08:20:00 GMT');
 
-    req.on('data', function (data) {
-      // consume the request body, if any
-    });
+    req.resume(); // consume the request body, if any
 
     req.on('end', function () {
       res.end('OK');

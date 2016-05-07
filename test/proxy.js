@@ -1,6 +1,8 @@
 // Copyright 2016 Yahoo Inc.
 // Licensed under the terms of the MIT license. Please see LICENSE file in the project root for terms.
 
+/* eslint-env mocha */
+
 var subject = require('../lib/proxy');
 var createServer = require('./helpers/server');
 var assert = require('assert');
