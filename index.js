@@ -18,6 +18,7 @@ var _ = require('lodash');
  * @param {Object} opts
  * @param {String} opts.dirname The tapes directory
  * @param {Boolean} opts.ignoreCookies ignore cookie values for tape name hash
+ * @param {Array} opts.recordStatusCodes Array of two integers e.g. [200, 300) indicating the range of acceptable status codes for recording tapes
  * @returns {Function}
  */
 
@@ -29,6 +30,9 @@ module.exports = function (host, opts) {
 
     debug('req', req.url);
 
+    delete req.rawHeaders;
+    opts.recordStatusCodes = opts.recordStatusCodes || [0,999];
+
     return buffer(req).then(function (body) {
       var file = path.join(opts.dirname, tapename(req, body, opts));
 
@@ -36,7 +40,13 @@ module.exports = function (host, opts) {
         return require.resolve(file);
       }).catch(ModuleNotFoundError, function (/* err */) {
         return proxy(req, body, host).then(function (res) {
-          return record(res.req, res, file);
+          if (_.inRange(res.statusCode, opts.recordStatusCodes[0], opts.recordStatusCodes[1]))
+            return record(res.req, res, file);
+          else {
+            var err = new Error('Status code not in acceptable range, skipping recording');
+            err.res = res;
+            throw err;
+          }
         });
       });
 
@@ -44,10 +54,15 @@ module.exports = function (host, opts) {
       return require(file);
     }).then(function (tape) {
       return tape(req, res);
+    }).catch(function(err) {
+       if (err.res) {
+         res.statusCode = err.res.statusCode;
+         res.headers = err.res.headers;
+         res.end();
+         return null;
+       }
     });
-
   };
-
 };
 
 /**
@@ -62,7 +77,6 @@ function tapename(req, body, opts) {
   var tempReq = _.cloneDeep(req);
   if (opts.ignoreCookies) {
     delete tempReq.headers.cookie;
-    delete tempReq.rawHeaders;
   }
   return hash.sync(tempReq, Buffer.concat(body)) + '.js';
 }
