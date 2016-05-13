@@ -10,12 +10,14 @@ var buffer = require('./lib/buffer');
 var proxy = require('./lib/proxy');
 var record = require('./lib/record');
 var debug = require('debug')('yakbak:server');
+var _ = require('lodash');
 
 /**
  * Returns a new yakbak proxy middleware.
  * @param {String} host The hostname to proxy to
  * @param {Object} opts
  * @param {String} opts.dirname The tapes directory
+ * @param {Boolean} opts.ignoreCookies ignore cookie values for tape name hash
  * @returns {Function}
  */
 
@@ -28,7 +30,7 @@ module.exports = function (host, opts) {
     debug('req', req.url);
 
     return buffer(req).then(function (body) {
-      var file = path.join(opts.dirname, tapename(req, body));
+      var file = path.join(opts.dirname, tapename(req, body, opts));
 
       return Promise.try(function () {
         return require.resolve(file);
@@ -52,11 +54,17 @@ module.exports = function (host, opts) {
  * Returns the tape name for `req`.
  * @param {http.IncomingMessage} req
  * @param {Array.<Buffer>} body
+ * @param {Object} opts
  * @returns {String}
  */
 
-function tapename(req, body) {
-  return hash.sync(req, Buffer.concat(body)) + '.js';
+function tapename(req, body, opts) {
+  var tempReq = _.cloneDeep(req);
+  if (opts.ignoreCookies) {
+    delete tempReq.headers.cookie;
+    delete tempReq.rawHeaders;
+  }
+  return hash.sync(tempReq, Buffer.concat(body)) + '.js';
 }
 
 /**
