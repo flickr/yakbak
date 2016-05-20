@@ -16,6 +16,7 @@ var debug = require('debug')('yakbak:server');
  * @param {String} host The hostname to proxy to
  * @param {Object} opts
  * @param {String} opts.dirname The tapes directory
+ * @param {Boolean} opts.noRecord if true, requests will return a 404 error if the tape doesn't exist
  * @returns {Function}
  */
 
@@ -33,15 +34,21 @@ module.exports = function (host, opts) {
       return Promise.try(function () {
         return require.resolve(file);
       }).catch(ModuleNotFoundError, function (/* err */) {
-        return proxy(req, body, host).then(function (res) {
-          return record(res.req, res, file);
-        });
+        if(!opts.noRecord) {
+          return proxy(req, body, host).then(function (res) {
+            return record(res.req, res, file);
+          });
+        } else {
+          throw {code: 'RECORDING_DISABLED'};
+        }
       });
-
     }).then(function (file) {
       return require(file);
     }).then(function (tape) {
       return tape(req, res);
+    }).catch(RecordingDisabledError, function (/* err */) {
+      res.statusCode = 404;
+      res.end("An HTTP request has been made that yakbak does not know how to handle (" + req.url + ")");
     });
 
   };
@@ -67,4 +74,14 @@ function tapename(req, body) {
 
 function ModuleNotFoundError(err) {
   return err.code === 'MODULE_NOT_FOUND';
+}
+
+/**
+ * Bluebird error predicate for matching recording disabled errors.
+ * @param {Error} err
+ * @returns {Boolean}
+ */
+
+function RecordingDisabledError(err) {
+  return err.code === 'RECORDING_DISABLED';
 }
