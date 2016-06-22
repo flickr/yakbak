@@ -7,6 +7,7 @@
 
 var http = require('http');
 var path = require('path');
+var curl = require('./lib/curl');
 var PORT = 3000;
 
 try {
@@ -23,24 +24,8 @@ try {
       console.log('* Connection closed');
     });
   }).on('request', function (req, res) {
-    console.log('< %s %s HTTP/%s', req.method, req.url, req.httpVersion);
-
-    Object.keys(req.headers).forEach(function (name) {
-      console.log('< %s: %s', name, req.headers[name]);
-    });
-
-    console.log('<');
-
-    console.log('> HTTP/%s %s %s',
-      req.httpVersion,
-      res.statusCode,
-      http.STATUS_CODES[res.statusCode]);
-
-    Object.keys(res._headers).forEach(function (name) {
-      console.log('> %s: %s', name, res._headers[name]);
-    });
-
-    console.log('>');
+    console.log(curl.request(req));
+    console.log(curl.response(req, res));
   }).listen(PORT, function () {
     console.log('Server listening on port %d', this.address().port);
   });
