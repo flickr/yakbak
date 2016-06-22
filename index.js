@@ -9,6 +9,7 @@ var path = require('path');
 var buffer = require('./lib/buffer');
 var proxy = require('./lib/proxy');
 var record = require('./lib/record');
+var curl = require('./lib/curl');
 var debug = require('debug')('yakbak:server');
 
 /**
@@ -49,8 +50,12 @@ module.exports = function (host, opts) {
     }).then(function (tape) {
       return tape(req, res);
     }).catch(RecordingDisabledError, function (/* err */) {
+      /* eslint-disable no-console */
+      console.log('An HTTP request has been made that yakbak does not know how to handle');
+      console.log(curl.request(req));
+      /* eslint-enable no-console */
       res.statusCode = 404;
-      res.end("An HTTP request has been made that yakbak does not know how to handle (" + req.url + ")");
+      res.end('Not Found');
     });
 
   };

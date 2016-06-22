@@ -73,7 +73,7 @@ describe('yakbak', function () {
         request(yakbak)
         .get('/record/2')
         .set('host', 'localhost:3001')
-        .expect(404, "An HTTP request has been made that yakbak does not know how to handle (/record/2)")
+        .expect(404)
         .end(done);
       });
 
