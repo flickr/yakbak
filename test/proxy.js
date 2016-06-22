@@ -20,9 +20,9 @@ describe('proxy', function () {
   });
 
   beforeEach(function () {
-    req        = new http.IncomingMessage;
+    req = new http.IncomingMessage;
     req.method = 'GET';
-    req.url    = '/';
+    req.url = '/';
     req.headers['connection'] = 'close';
   });
 
@@ -46,14 +46,14 @@ describe('proxy', function () {
       new Buffer('c')
     ];
 
-    server.once('request', function (req) {
+    server.once('request', function (_req) {
       var data = [];
 
-      req.on('data', function (buf) {
+      _req.on('data', function (buf) {
         data.push(buf);
       });
 
-      req.on('end', function () {
+      _req.on('end', function () {
         assert.deepEqual(Buffer.concat(data), Buffer.concat(body));
         done();
       });

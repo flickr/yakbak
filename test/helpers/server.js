@@ -9,7 +9,7 @@ var http = require('http');
  * @returns {http.Server}
  */
 
-module.exports = function createServer(done) {
+module.exports = function createServer(cb) {
 
   var server = http.createServer(function (req, res) {
     res.statusCode = 201;
@@ -40,6 +40,6 @@ module.exports = function createServer(done) {
     this.close(done);
   };
 
-  return server.listen(done);
+  return server.listen(cb);
 
 };

@@ -30,7 +30,7 @@ describe('yakbak', function () {
   });
 
   describe('record', function () {
-    describe("when recording is enabled", function() {
+    describe('when recording is enabled', function () {
       beforeEach(function () {
         yakbak = subject(server.host, { dirname: tmpdir.dirname });
       });
@@ -64,7 +64,7 @@ describe('yakbak', function () {
       });
     });
 
-    describe("when recording is not enabled", function() {
+    describe("when recording is not enabled", function () {
       beforeEach(function () {
         yakbak = subject(server.host, { dirname: tmpdir.dirname, noRecord: true });
       });

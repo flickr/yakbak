@@ -36,11 +36,11 @@ module.exports = function (host, opts) {
         return require.resolve(file);
       }).catch(ModuleNotFoundError, function (/* err */) {
 
-        if(opts.noRecord) {
-          throw { code: 'RECORDING_DISABLED' };
+        if (opts.noRecord) {
+          throw new RecordingDisabledError('Recording Disabled');
         } else {
-          return proxy(req, body, host).then(function (res) {
-            return record(res.req, res, file);
+          return proxy(req, body, host).then(function (pres) {
+            return record(pres.req, pres, file);
           });
         }
 
@@ -49,13 +49,13 @@ module.exports = function (host, opts) {
       return require(file);
     }).then(function (tape) {
       return tape(req, res);
-    }).catch(RecordingDisabledError, function (/* err */) {
+    }).catch(RecordingDisabledError, function (err) {
       /* eslint-disable no-console */
       console.log('An HTTP request has been made that yakbak does not know how to handle');
       console.log(curl.request(req));
       /* eslint-enable no-console */
-      res.statusCode = 404;
-      res.end('Not Found');
+      res.statusCode = err.status;
+      res.end(err.message);
     });
 
   };
@@ -84,11 +84,14 @@ function ModuleNotFoundError(err) {
 }
 
 /**
- * Bluebird error predicate for matching recording disabled errors.
- * @param {Error} err
- * @returns {Boolean}
+ * Error class that is thrown when an unmatched request
+ * is encountered in noRecord mode
+ * @constructor
  */
 
-function RecordingDisabledError(err) {
-  return err.code === 'RECORDING_DISABLED';
+function RecordingDisabledError(message) {
+  this.message = message;
+  this.status = 404;
 }
+
+RecordingDisabledError.prototype = Object.create(Error.prototype);

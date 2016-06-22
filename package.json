@@ -25,6 +25,7 @@
   "license": "MIT",
   "devDependencies": {
     "eslint": "^2.9.0",
+    "eslint-config-flickr": "~1.1.7",
     "mocha": "~2.3.4",
     "os-tmpdir": "^1.0.1",
     "rimraf": "^2.5.2",
