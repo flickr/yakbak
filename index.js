@@ -34,13 +34,15 @@ module.exports = function (host, opts) {
       return Promise.try(function () {
         return require.resolve(file);
       }).catch(ModuleNotFoundError, function (/* err */) {
-        if(!opts.noRecord) {
+
+        if(opts.noRecord) {
+          throw { code: 'RECORDING_DISABLED' };
+        } else {
           return proxy(req, body, host).then(function (res) {
             return record(res.req, res, file);
           });
-        } else {
-          throw {code: 'RECORDING_DISABLED'};
         }
+
       });
     }).then(function (file) {
       return require(file);
