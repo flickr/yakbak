@@ -10,12 +10,18 @@ function read(file) {
 }
 
 /**
- * node >= 1.5.0 sends the content-length whenever possible
- * @see https://github.com/nodejs/node/pull/1062
+ * Returns a fixture based on a sufix and node version
+ * @type {String} sufix
+ * @returns {String}
  */
-
-if (semver.gte(process.version, '1.5.0')) {
-  module.exports = read('v1.5.0');
-} else {
-  module.exports = read('v0.10.x');
-}
+module.exports = function (sufix) {
+  /**
+  * node >= 1.5.0 sends the content-length whenever possible
+  * @see https://github.com/nodejs/node/pull/1062
+  */
+  if (semver.gte(process.version, '1.5.0')) {
+    return read('v1.5.0-' + sufix);
+  } else {
+    return read('v0.10.x-' + sufix);
+  }
+};

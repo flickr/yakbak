@@ -18,7 +18,7 @@ module.exports = function (req, res) {
 
   res.setHeader("x-yakbak-tape", path.basename(__filename, ".js"));
 
-  res.write(new Buffer("T0s=", "base64"));
+  res.write(new Buffer("OK", 'utf-8'));
   res.end();
 
   return __filename;

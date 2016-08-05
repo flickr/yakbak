@@ -34,6 +34,7 @@
   },
   "dependencies": {
     "bluebird": "~3.3.4",
+    "content-type": "~1.0.2",
     "debug": "~2.1.2",
     "ejs": "~2.3.1",
     "incoming-message-hash": "~3.2.1",

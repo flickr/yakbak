@@ -6,23 +6,26 @@ var http = require('http');
 /**
  * Creates a test HTTP server.
  * @param {Function} done
+ * @param {Function} reqHandler: an optional callback to customize how to handle the request
  * @returns {http.Server}
  */
 
-module.exports = function createServer(cb) {
+module.exports = function createServer(done, reqHandler) {
 
   var server = http.createServer(function (req, res) {
-    res.statusCode = 201;
-
-    res.setHeader('Content-Type', 'text/html');
-    res.setHeader('Date', 'Sat, 26 Oct 1985 08:20:00 GMT');
-
     req.resume(); // consume the request body, if any
 
     req.on('end', function () {
-      res.end('OK');
-    });
+      if (reqHandler) {
+        reqHandler(req, res);
+      } else {
+        res.statusCode = 201;
 
+        res.setHeader('Content-Type', 'text/html');
+        res.setHeader('Date', 'Sat, 26 Oct 1985 08:20:00 GMT');
+        res.end('OK');
+      }
+    });
   }).on('listening', function () {
     this.addr = 'localhost';
     this.port = this.address().port;
@@ -36,10 +39,10 @@ module.exports = function createServer(cb) {
     this.requests.push(req);
   });
 
-  server.teardown = function (done) {
-    this.close(done);
+  server.teardown = function (doneT) {
+    this.close(doneT);
   };
 
-  return server.listen(cb);
+  return server.listen(done);
 
 };
