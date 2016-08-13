@@ -33,7 +33,7 @@ module.exports = function (host, opts) {
     debug('req', req.url);
 
     delete req.rawHeaders;
-    opts.recordStatusCodes = opts.recordStatusCodes || [0,999];
+    opts.recordStatusCodes = opts.recordStatusCodes || [0, 999];
 
     return buffer(req).then(function (body) {
       var file = path.join(opts.dirname, tapename(req, body, opts));
@@ -45,14 +45,14 @@ module.exports = function (host, opts) {
           throw new RecordingDisabledError('Recording Disabled');
         } else {
             return proxy(req, body, host).then(function (pres) {
-                if (_.inRange(pres.statusCode, opts.recordStatusCodes[0], opts.recordStatusCodes[1]))
+                if (_.inRange(pres.statusCode, opts.recordStatusCodes[0], opts.recordStatusCodes[1])) {
                     return record(pres.req, pres, file);
-                else {
+                } else {
                     throw new StatusCodeOutOfRangeError('Status code out of range, skipping recording', res);
                 }
             });
         }
-      })
+      });
     }).then(function (file) {
       return require(file);
     }).then(function (tape) {
@@ -64,12 +64,14 @@ module.exports = function (host, opts) {
       /* eslint-enable no-console */
       res.statusCode = err.status;
       res.end(err.message);
-    }).catch(StatusCodeOutOfRangeError, function(err) {
+    }).catch(StatusCodeOutOfRangeError, function (err) {
+        /* eslint-disable no-console */
         console.log(err.message);
+        /* eslint-enable no-console */
         res.statusCode = err.res.statusCode;
         res.headers = err.res.headers;
         res.end();
-    })
+    });
   };
 };
 
@@ -83,6 +85,7 @@ module.exports = function (host, opts) {
 
 function tapename(req, body, opts) {
   var tempReq = _.cloneDeep(req);
+
   if (opts.ignoreCookies) {
     delete tempReq.headers.cookie;
   }
