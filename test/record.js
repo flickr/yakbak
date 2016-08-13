@@ -36,7 +36,7 @@ describe('record', function () {
       host: server.addr,
       port: server.port
     });
-    req.setHeader('User-Agent', 'My User Agent/1.0')
+    req.setHeader('User-Agent', 'My User Agent/1.0');
     req.setHeader('Connection', 'close');
   });
 

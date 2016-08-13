@@ -9,16 +9,18 @@ var path = require('path');
 var buffer = require('./lib/buffer');
 var proxy = require('./lib/proxy');
 var record = require('./lib/record');
+var curl = require('./lib/curl');
 var debug = require('debug')('yakbak:server');
 var _ = require('lodash');
 
 /**
  * Returns a new yakbak proxy middleware.
- * @param {String} host The hostname to proxy to
- * @param {Object} opts
- * @param {String} opts.dirname The tapes directory
+ * @param {String}  host The hostname to proxy to
+ * @param {Object}  opts
+ * @param {String}  opts.dirname The tapes directory
  * @param {Boolean} opts.ignoreCookies ignore cookie values for tape name hash
- * @param {Array} opts.recordStatusCodes Array of two integers e.g. [200, 300) indicating the range of acceptable status codes for recording tapes
+ * @param {Array}   opts.recordStatusCodes Array of two integers e.g. [200, 300) indicating the range of acceptable status codes for recording tapes
+ * @param {Boolean} opts.noRecord if true, requests will return a 404 error if the tape doesn't exist
  * @returns {Function}
  */
 
@@ -39,29 +41,35 @@ module.exports = function (host, opts) {
       return Promise.try(function () {
         return require.resolve(file);
       }).catch(ModuleNotFoundError, function (/* err */) {
-        return proxy(req, body, host).then(function (res) {
-          if (_.inRange(res.statusCode, opts.recordStatusCodes[0], opts.recordStatusCodes[1]))
-            return record(res.req, res, file);
-          else {
-            var err = new Error('Status code not in acceptable range, skipping recording');
-            err.res = res;
-            throw err;
-          }
-        });
-      });
-
+        if (opts.noRecord) {
+          throw new RecordingDisabledError('Recording Disabled');
+        } else {
+            return proxy(req, body, host).then(function (pres) {
+                if (_.inRange(pres.statusCode, opts.recordStatusCodes[0], opts.recordStatusCodes[1]))
+                    return record(pres.req, pres, file);
+                else {
+                    throw new StatusCodeOutOfRangeError('Status code out of range, skipping recording', res);
+                }
+            });
+        }
+      })
     }).then(function (file) {
       return require(file);
     }).then(function (tape) {
       return tape(req, res);
-    }).catch(function(err) {
-       if (err.res) {
-         res.statusCode = err.res.statusCode;
-         res.headers = err.res.headers;
-         res.end();
-         return null;
-       }
-    });
+    }).catch(RecordingDisabledError, function (err) {
+      /* eslint-disable no-console */
+      console.log('An HTTP request has been made that yakbak does not know how to handle');
+      console.log(curl.request(req));
+      /* eslint-enable no-console */
+      res.statusCode = err.status;
+      res.end(err.message);
+    }).catch(StatusCodeOutOfRangeError, function(err) {
+        console.log(err.message);
+        res.statusCode = err.res.statusCode;
+        res.headers = err.res.headers;
+        res.end();
+    })
   };
 };
 
@@ -90,3 +98,28 @@ function tapename(req, body, opts) {
 function ModuleNotFoundError(err) {
   return err.code === 'MODULE_NOT_FOUND';
 }
+
+/**
+ * Error class that is thrown when an unmatched request
+ * is encountered in noRecord mode
+ * @constructor
+ */
+
+function RecordingDisabledError(message) {
+  this.message = message;
+  this.status = 404;
+}
+
+RecordingDisabledError.prototype = Object.create(Error.prototype);
+
+/**
+ * Error class that is thrown when response code does not
+ * fall in the required range in options
+ * @constructor
+ */
+function StatusCodeOutOfRangeError(message, res) {
+  this.message = message;
+  this.res = res;
+}
+
+StatusCodeOutOfRangeError.prototype = Object.create(Error.prototype);

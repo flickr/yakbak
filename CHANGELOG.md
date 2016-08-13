@@ -1,5 +1,11 @@
 # Change Log
 
+## [2.5.0] - 2016-06-22
+
+### Added
+
+- `noRecord` option that will return a 404 and log the request if yakbak receives an unrecorded request ([#17])
+
 ## [2.4.3] - 2016-05-10
 
 ### Fixed
@@ -17,3 +23,4 @@
 
 [#12]: https://github.com/flickr/yakbak/pull/12
 [#13]: https://github.com/flickr/yakbak/pull/13
+[#17]: https://github.com/flickr/yakbak/pull/17
