@@ -48,7 +48,7 @@ module.exports = function (host, opts) {
                 if (_.inRange(pres.statusCode, opts.recordStatusCodes[0], opts.recordStatusCodes[1])) {
                     return record(pres.req, pres, file);
                 } else {
-                    throw new StatusCodeOutOfRangeError('Status code out of range, skipping recording', res);
+                    throw new StatusCodeOutOfRangeError('Status code out of range, skipping recording', pres);
                 }
             });
         }
