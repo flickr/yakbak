@@ -65,9 +65,6 @@ module.exports = function (host, opts) {
       res.statusCode = err.status;
       res.end(err.message);
     }).catch(StatusCodeOutOfRangeError, function (err) {
-        /* eslint-disable no-console */
-        console.log(err.message);
-        /* eslint-enable no-console */
         res.statusCode = err.res.statusCode;
         res.headers = err.res.headers;
         res.end();
