@@ -6,11 +6,3 @@ node_js:
 - '0.10'
 before_script:
   - npm run lint
-deploy:
-  provider: npm
-  email: jeremy.ruppel@gmail.com
-  api_key:
-    secure: gstkA6hGkIsj2TqAVEFZFLm/mdD9U1du6ELTU8YnPcSQt3wixSrnFjBIzB7N86nF/eLY78DyC+Fswk57/B2DpOkyRafwTVAf5/ky+RkbKECU+jXUeS6dNk3GM6aPjIJG+iJxUZjx8CVSsE0DwmRBRivwRPgp3Yn/zMkzfHMw4drKEaKBHCROAzpRwHqMLCrX6jrE7YOl1noEsbl3BzCTiCTLhDEp2Rh8jF5HqqZCJATxI/ShJyHtD+d6NYQAbXotLKFgF4kOzjvKAFI1Fbl9bJXWwAILbJqdYMMZ3R8SyR46GDH9QZf92YInvZl3zSMyXiOD1y/j8QuzaEQiAZug2kPICvN2x8QezagsiX99F5jTn4ihW/eg42R/I2LNMjRPBMMq6N0LAtX7ZV3S2vzBlu4Hw0ILFE1yA7MZaEzVKgFmgfT+2m+nxXFFS5+k78CHudm9yHzlO6WyNDGLI9jlwKqQ2Obe1c9/iQxNUMNHzsVCSWY/sYliOvqSKUpkzy1f/ZwlKuTa85wvis7KWdVxsd4DwNCuHTbirVDw+OC5CGVmwSSoOpo7WO09pKHD8djMnJZZbk4MvGxT24dNbQBBPORjqtSt/WIcvdSNuI2uMM7QWfF8wj+mwup/9gjO7faFUbPegA0PuxPJ+bvoXwoibnsltnBbXofx9ZE5q4Dj228=
-  on:
-    tags: true
-    repo: flickr/yakbak
