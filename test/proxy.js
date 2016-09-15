@@ -7,6 +7,7 @@ var subject = require('../lib/proxy');
 var createServer = require('./helpers/server');
 var assert = require('assert');
 var http = require('http');
+var https = require('https');
 
 describe('proxy', function () {
   var server, req;
@@ -33,6 +34,19 @@ describe('proxy', function () {
       assert.equal(preq.headers.host, server.addr + ':' + server.port);
       done();
     });
+
+    subject(req, [], server.host).catch(function (err) {
+      done(err);
+    });
+  });
+
+  it('overrides the host if one is set on the incoming request', function (done) {
+    server.once('request', function (preq) {
+      assert.equal(preq.headers.host, server.addr + ':' + server.port);
+      done();
+    });
+
+    req.headers['host'] = 'A.N.OTHER'
 
     subject(req, [], server.host).catch(function (err) {
       done(err);
