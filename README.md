@@ -33,6 +33,7 @@ var handler = yakbak('http://api.flickr.com', {
 
 - `dirname` the path where recorded responses will be written (required).
 - `noRecord` if true, requests will return a 404 error if the tape doesn't exist
+- `simpleTapeName` if true only includes `req.method` + `req.url` in `tapename`
 
 ### with node's http module
 
