@@ -62,6 +62,26 @@ describe('yakbak', function () {
           done();
         });
       });
+
+      describe('when simpleTapeName = true', function () {
+        beforeEach(function () {
+          yakbak = subject(server.host, { dirname: tmpdir.dirname, simpleTapeName: true });
+        });
+
+        it('can write to disk with a descriptive filename', function(done) {
+          request(yakbak)
+          .get('/record/2')
+          .set('host', 'localhost:3001')
+          .expect('X-Yakbak-Tape', 'GET_record_2')
+          .expect('Content-Type', 'text/html')
+          .expect(201, 'OK')
+          .end(function (err) {
+            assert.ifError(err);
+            assert(fs.existsSync(tmpdir.join('GET_record_2.js')));
+            done();
+          });
+        });
+      });
     });
 
     describe("when recording is not enabled", function () {

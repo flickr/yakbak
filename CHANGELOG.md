@@ -1,5 +1,11 @@
 # Change Log
 
+## [2.6.0] - 2016-09-15
+
+### Added
+
+- `simpleTapeName` option only includes `req.method` + `req.url` in `tapename`.
+
 ## [2.5.0] - 2016-06-22
 
 ### Added

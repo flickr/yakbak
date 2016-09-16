@@ -18,6 +18,7 @@ var debug = require('debug')('yakbak:server');
  * @param {Object} opts
  * @param {String} opts.dirname The tapes directory
  * @param {Boolean} opts.noRecord if true, requests will return a 404 error if the tape doesn't exist
+ * @param {Boolean} opts.simpleTapeName if true only includes `req.method` + `req.url` in `tapename`
  * @returns {Function}
  */
 
@@ -30,7 +31,7 @@ module.exports = function (host, opts) {
     debug('req', req.url);
 
     return buffer(req).then(function (body) {
-      var file = path.join(opts.dirname, tapename(req, body));
+      var file = path.join(opts.dirname, tapename(req, body, opts.simpleTapeName));
 
       return Promise.try(function () {
         return require.resolve(file);
@@ -69,8 +70,13 @@ module.exports = function (host, opts) {
  * @returns {String}
  */
 
-function tapename(req, body) {
-  return hash.sync(req, Buffer.concat(body)) + '.js';
+function tapename(req, body, simple = false) {
+  if (simple) {
+    return `${req.method}${req.url.replace(/\//g, '_')}.js`;
+  } else {
+    console.log(hash.sync(req, Buffer.concat(body)) + '.js');
+    return hash.sync(req, Buffer.concat(body)) + '.js';
+  }
 }
 
 /**
