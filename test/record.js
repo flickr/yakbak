@@ -9,6 +9,7 @@ var createTmpdir = require('./helpers/tmpdir');
 var assert = require('assert');
 var http = require('http');
 var fs = require('fs');
+var path = require('path');
 
 var fixture = require('./fixtures');
 
@@ -58,6 +59,31 @@ describe('record', function () {
 
     req.on('response', function (res) {
       subject(req, res, tmpdir.join('foo.js')).then(function (filename) {
+        assert.equal(fs.readFileSync(filename, 'utf8'), expected);
+        done();
+      }).catch(function (err) {
+        done(err);
+      });
+    });
+
+    req.end();
+  });
+
+  it('uses the parse function if passed in', function (done) {
+    var customParseFixture = fs.readFileSync(path.join(__dirname, 'fixtures/custom-parse.js'), 'utf8');
+    var expected = customParseFixture.replace('{addr}', server.addr).replace('{port}', server.port);
+    var parse = function (preq, pres, pbody) {
+      var newBody = pbody.map(function (chunk) {
+        var str = 'parsed::' + chunk.toString('utf8');
+
+        return new Buffer(str, 'utf8');
+      });
+
+      return { req: preq, res: pres, body: newBody };
+    };
+
+    req.on('response', function (res) {
+      subject(req, res, tmpdir.join('foo.js'), parse).then(function (filename) {
         assert.equal(fs.readFileSync(filename, 'utf8'), expected);
         done();
       }).catch(function (err) {
