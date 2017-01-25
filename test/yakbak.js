@@ -32,7 +32,7 @@ describe('yakbak', function () {
   describe('record', function () {
     describe('when recording is enabled', function () {
       beforeEach(function () {
-        yakbak = subject(server.host, { dirname: tmpdir.dirname });
+        yakbak = subject(server.host, { dirname: tmpdir.dirname, ignore: ['rand'] });
       });
 
       it('proxies the request to the server', function (done) {
@@ -103,7 +103,7 @@ describe('yakbak', function () {
 
   describe('playback', function () {
     beforeEach(function () {
-      yakbak = subject(server.host, { dirname: tmpdir.dirname });
+      yakbak = subject(server.host, { dirname: tmpdir.dirname, ignore: ['rand'] });
     });
 
     beforeEach(function (done) {
@@ -135,6 +135,20 @@ describe('yakbak', function () {
         done();
       });
 
+    });
+
+    it('does not make a request to the server with ignoring values', function (done) {
+      request(yakbak)
+      .get('/record/2?rand=' + Math.random())
+      .set('host', 'localhost:3001')
+      .expect('X-Yakbak-Tape', '3234ee470c8605a1837e08f218494326')
+      .expect('Content-Type', 'text/html')
+      .expect(201, 'OK')
+      .end(function (err) {
+        assert.ifError(err);
+        assert(fs.existsSync(tmpdir.join('3234ee470c8605a1837e08f218494326.js')));
+        done();
+      });
     });
   });
 });
