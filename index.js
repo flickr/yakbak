@@ -30,7 +30,7 @@ module.exports = function (host, opts) {
     debug('req', req.url);
 
     return buffer(req).then(function (body) {
-      var file = path.join(opts.dirname, tapename(req, body));
+      var file = path.join(opts.dirname, tapename(req, body, opts.ignore));
 
       return Promise.try(function () {
         return require.resolve(file);
@@ -69,8 +69,8 @@ module.exports = function (host, opts) {
  * @returns {String}
  */
 
-function tapename(req, body) {
-  return hash.sync(req, Buffer.concat(body)) + '.js';
+function tapename(req, body, ignore) {
+  return hash.sync(req, Buffer.concat(body), null, null, ignore) + '.js';
 }
 
 /**
