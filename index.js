@@ -2,7 +2,7 @@
 // Licensed under the terms of the MIT license. Please see LICENSE file in the project root for terms.
 
 var Promise = require('bluebird');
-var hash = require('incoming-message-hash');
+var messageHash = require('incoming-message-hash');
 var assert = require('assert');
 var mkdirp = require('mkdirp');
 var path = require('path');
@@ -60,18 +60,20 @@ module.exports = function (host, opts) {
 
   };
 
+  /**
+   * Returns the tape name for `req`.
+   * @param {http.IncomingMessage} req
+   * @param {Array.<Buffer>} body
+   * @returns {String}
+   */
+
+  function tapename(req, body) {
+    var hash = opts.hash || messageHash.sync;
+
+    return hash(req, Buffer.concat(body)) + '.js';
+  }
+
 };
-
-/**
- * Returns the tape name for `req`.
- * @param {http.IncomingMessage} req
- * @param {Array.<Buffer>} body
- * @returns {String}
- */
-
-function tapename(req, body) {
-  return hash.sync(req, Buffer.concat(body)) + '.js';
-}
 
 /**
  * Bluebird error predicate for matching module not found errors.
