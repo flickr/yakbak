@@ -9,6 +9,8 @@ var createTmpdir = require('./helpers/tmpdir');
 var request = require('supertest');
 var assert = require('assert');
 var fs = require('fs');
+var crypto = require('crypto');
+var url = require('url');
 
 describe('yakbak', function () {
   var server, tmpdir, yakbak;
@@ -60,6 +62,40 @@ describe('yakbak', function () {
           assert.ifError(err);
           assert(fs.existsSync(tmpdir.join('3234ee470c8605a1837e08f218494326.js')));
           done();
+        });
+      });
+
+      describe('when given a custom hashing function', function () {
+        beforeEach(function () {
+          yakbak = subject(server.host, { dirname: tmpdir.dirname, hash: customHash });
+
+          // customHash creates a MD5 of the request, ignoring its querystring, headers, etc.
+          function customHash(req, body) {
+            var hash = crypto.createHash('md5');
+            var parts = url.parse(req.url, true);
+
+            hash.update(req.method);
+            hash.update(parts.pathname);
+            hash.write(body);
+
+            return hash.digest('hex');
+          }
+        });
+
+        it('uses the custom hash to create the tape name', function (done) {
+          request(yakbak)
+          .get('/record/1')
+          .query({ foo: 'bar' })
+          .query({ date: new Date() }) // without the custom hash, this would always cause 404s
+          .set('host', 'localhost:3001')
+          .expect('X-Yakbak-Tape', '3f142e515cb24d1af9e51e6869bf666f')
+          .expect('Content-Type', 'text/html')
+          .expect(201, 'OK')
+          .end(function (err) {
+            assert.ifError(err);
+            assert(fs.existsSync(tmpdir.join('3f142e515cb24d1af9e51e6869bf666f.js')));
+            done();
+          });
         });
       });
     });
