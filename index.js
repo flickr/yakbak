@@ -18,6 +18,7 @@ var debug = require('debug')('yakbak:server');
  * @param {Object} opts
  * @param {String} opts.dirname The tapes directory
  * @param {Boolean} opts.noRecord if true, requests will return a 404 error if the tape doesn't exist
+ * @param {Function} opts.parse hook to rewrite the response before writing to a tape
  * @returns {Function}
  */
 
@@ -40,7 +41,7 @@ module.exports = function (host, opts) {
           throw new RecordingDisabledError('Recording Disabled');
         } else {
           return proxy(req, body, host).then(function (pres) {
-            return record(pres.req, pres, file);
+            return record(pres.req, pres, file, opts.parse);
           });
         }
 

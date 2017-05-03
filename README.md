@@ -33,6 +33,29 @@ var handler = yakbak('http://api.flickr.com', {
 
 - `dirname` the path where recorded responses will be written (required).
 - `noRecord` if true, requests will return a 404 error if the tape doesn't exist
+- `parse` optional hook function to modify the response before writing to a tape
+
+	```javascript
+	// Example that rewrites url in content body
+	parse: function (req, res, body) {
+		var isGzipped = req._headers['accept-encoding'].indexOf('gzip') > -1;
+		var replaceRe = new RegExp('http://api.flickr.com', 'g');
+
+		// Body is an array of Buffers
+		var newBody = body.map(function (chunk) {
+			if (isGzipped) {
+				chunk = zlib.gunzipSync(chunk);
+			}
+			var buffer = new Buffer(chunk.toString('utf8).replace(replaceRe, 'http://localhost:3000'));
+			if (isGzipped) {
+				buffer = zlib.gzipSync(buffer);
+			}
+			return buffer;
+		});
+
+		return { req: req, res: res, body: newBody };
+	}
+	```
 
 ### with node's http module
 
