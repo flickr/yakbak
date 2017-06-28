@@ -18,6 +18,7 @@ var debug = require('debug')('yakbak:server');
  * @param {Object} opts
  * @param {String} opts.dirname The tapes directory
  * @param {Boolean} opts.noRecord if true, requests will return a 404 error if the tape doesn't exist
+ * @param {Boolean} opts.recordOnlySuccess if true, requests which return only 2XX will be recorded.
  * @returns {Function}
  */
 
@@ -31,6 +32,7 @@ module.exports = function (host, opts) {
 
     return buffer(req).then(function (body) {
       var file = path.join(opts.dirname, tapename(req, body));
+      var successfulResponse = /^[2][0|2][0-8]$/;
 
       return Promise.try(function () {
         return require.resolve(file);
@@ -40,7 +42,20 @@ module.exports = function (host, opts) {
           throw new RecordingDisabledError('Recording Disabled');
         } else {
           return proxy(req, body, host).then(function (pres) {
-            return record(pres.req, pres, file);
+            console.log('Am i here', opts); // eslint-disable-line
+            if (opts.recordOnlySuccess === true) {
+              console.log('Am i here-1', opts, pres.statusCode); // eslint-disable-line
+                if (successfulResponse.test(pres.statusCode)) {
+                  console.log('Am i here-2', opts); // eslint-disable-line
+                   return record(pres.req, pres, file);
+                } else {
+                  console.log('Am i here-3', opts); // eslint-disable-line
+                  throw new RecordingDisabledError('Only Successful responses will be recorded');
+                }
+            } else {
+              console.log('Am i here-4', opts); // eslint-disable-line
+              return record(pres.req, pres, file);
+            }
           });
         }
 
