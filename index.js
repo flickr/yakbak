@@ -42,18 +42,13 @@ module.exports = function (host, opts) {
           throw new RecordingDisabledError('Recording Disabled');
         } else {
           return proxy(req, body, host).then(function (pres) {
-            console.log('Am i here', opts); // eslint-disable-line
             if (opts.recordOnlySuccess === true) {
-              console.log('Am i here-1', opts, pres.statusCode); // eslint-disable-line
                 if (successfulResponse.test(pres.statusCode)) {
-                  console.log('Am i here-2', opts); // eslint-disable-line
                    return record(pres.req, pres, file);
                 } else {
-                  console.log('Am i here-3', opts); // eslint-disable-line
                   throw new RecordingDisabledError('Only Successful responses will be recorded');
                 }
             } else {
-              console.log('Am i here-4', opts); // eslint-disable-line
               return record(pres.req, pres, file);
             }
           });

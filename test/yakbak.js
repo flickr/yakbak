@@ -12,7 +12,6 @@ var fs = require('fs');
 var crypto = require('crypto');
 var url = require('url');
 
-/* eslint-dsiable*/
 describe('yakbak', function () {
   var server, tmpdir, yakbak;
 
@@ -25,12 +24,10 @@ describe('yakbak', function () {
   });
 
   beforeEach(function (done) {
-    console.log('Create dir');
     tmpdir = createTmpdir(done);
   });
 
   afterEach(function (done) {
-    console.log('director deletio dir');
     tmpdir.teardown(done);
   });
 
@@ -140,18 +137,20 @@ describe('yakbak', function () {
     });
 
     describe.only("when onlySuccessResponse is enabled", function () {
-      beforeEach(function () {
+      beforeEach(function (done) {
+        // server.teardown(done);
+        server = createServer(done, true);
         yakbak = subject(server.host, { dirname: tmpdir.dirname, recordOnlySuccess: true });
       });
 
-      it('does not write the tape to disk', function (done) {
+      it('does not write the tape to disk if response statusCode is not 2XX', function (done) {
         request(yakbak)
-        .get('/blahblah/2')
-        .set('host', 'localhost:4001')
+        .get('/record/2')
+        .set('host', 'localhost:3001')
         .expect(404)
         .end(function (err) {
-          console.log('I am in end error', tmpdir.dirname, err); // eslint-disable-line
-         // assert(!fs.existsSync(tmpdir.join('3234ee470c8605a1837e08f218494326.js')));
+          assert.ifError(err);
+          assert(!fs.existsSync(tmpdir.join('3234ee470c8605a1837e08f218494326.js')));
           done();
         });
       });

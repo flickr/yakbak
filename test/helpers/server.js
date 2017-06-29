@@ -6,13 +6,14 @@ var http = require('http');
 /**
  * Creates a test HTTP server.
  * @param {Function} done
+ * @param {boolean} errorResponse - Specifies whether response has to be error or not
  * @returns {http.Server}
  */
 
-module.exports = function createServer(cb) {
-
+module.exports = function createServer(cb, errorResponse) {
+  console.log('In create server:', cb, errorResponse);
   var server = http.createServer(function (req, res) {
-    res.statusCode = 201;
+    res.statusCode = errorResponse === true ? 404 : 201;
 
     res.setHeader('Content-Type', 'text/html');
     res.setHeader('Date', 'Sat, 26 Oct 1985 08:20:00 GMT');
