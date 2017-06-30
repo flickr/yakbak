@@ -18,7 +18,7 @@ var debug = require('debug')('yakbak:server');
  * @param {Object} opts
  * @param {String} opts.dirname The tapes directory
  * @param {Boolean} opts.noRecord if true, requests will return a 404 error if the tape doesn't exist
- * @param {Boolean} opts.recordOnlySuccess if true, requests which return only 2XX will be recorded.
+ * @param {Boolean} opts.recordOnlySuccess if true, only successful requests will be recorded
  * @returns {Function}
  */
 
@@ -32,7 +32,7 @@ module.exports = function (host, opts) {
 
     return buffer(req).then(function (body) {
       var file = path.join(opts.dirname, tapename(req, body));
-      var successfulResponse = /^[2][0|2][0-8]$/;
+      var successfulResCodePattern = /^[2][0|2][0-8]$/;
 
       return Promise.try(function () {
         return require.resolve(file);
@@ -43,7 +43,7 @@ module.exports = function (host, opts) {
         } else {
           return proxy(req, body, host).then(function (pres) {
             if (opts.recordOnlySuccess === true) {
-                if (successfulResponse.test(pres.statusCode)) {
+                if (successfulResCodePattern.test(pres.statusCode)) {
                    return record(pres.req, pres, file);
                 } else {
                   throw new RecordingDisabledError('Only Successful responses will be recorded');
@@ -97,7 +97,8 @@ function ModuleNotFoundError(err) {
 
 /**
  * Error class that is thrown when an unmatched request
- * is encountered in noRecord mode
+ * is encountered in noRecord mode or when recordOnlySuccess is enabled
+ * and the request failed
  * @constructor
  */
 

@@ -33,6 +33,7 @@ var handler = yakbak('http://api.flickr.com', {
 
 - `dirname` the path where recorded responses will be written (required).
 - `noRecord` if true, requests will return a 404 error if the tape doesn't exist
+- `recordOnlySuccess` if true, only successful requests (response status code = 2XX) will be recorded
 - `hash(req, body)` provide your own IncomingMessage hash function
 
 ### with node's http module

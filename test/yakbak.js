@@ -136,10 +136,19 @@ describe('yakbak', function () {
       });
     });
 
-    describe.only("when onlySuccessResponse is enabled", function () {
+    describe("when onlySuccessResponse is enabled", function () {
       beforeEach(function (done) {
-        // server.teardown(done);
+         /* tear down the server created in global scope as we
+         need different server object which can send response with failed status code*/
+        server.teardown(done);
+      });
+
+      beforeEach(function (done) {
+        /* Send the failed response for the requests this server handles */
         server = createServer(done, true);
+      });
+
+      beforeEach(function () {
         yakbak = subject(server.host, { dirname: tmpdir.dirname, recordOnlySuccess: true });
       });
 
