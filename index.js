@@ -61,7 +61,7 @@ module.exports = function (host, opts) {
       return tape(req, res);
     }).catch(RecordingDisabledError, function (err) {
       /* eslint-disable no-console */
-      console.log('An HTTP request has been made that yakbak does not know how to handle');
+      console.log(err.message);
       console.log(curl.request(req));
       /* eslint-enable no-console */
       res.statusCode = err.status;
