@@ -97,8 +97,7 @@ function ModuleNotFoundError(err) {
 
 /**
  * Error class that is thrown when an unmatched request
- * is encountered in noRecord mode or when recordOnlySuccess is enabled
- * and the request failed
+ * is encountered in noRecord mode or when a request failed in recordOnlySuccess mode
  * @constructor
  */
 
