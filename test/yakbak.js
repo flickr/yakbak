@@ -135,6 +135,36 @@ describe('yakbak', function () {
         });
       });
     });
+
+
+  describe("when onlySuccessResponse is enabled", function () {
+        beforeEach(function (done) {
+           /* tear down the server created in global scope as we
+           need different server object which can send response with failed status code*/
+          server.teardown(done);
+        });
+
+        beforeEach(function (done) {
+          /* Send the failed response for the requests this server handles */
+          server = createServer(done, true);
+        });
+
+        beforeEach(function () {
+          yakbak = subject(server.host, { dirname: tmpdir.dirname, recordOnlySuccess: true });
+        });
+
+        it('does not write the tape to disk if response statusCode is not 2XX', function (done) {
+          request(yakbak)
+          .get('/record/2')
+          .set('host', 'localhost:3001')
+          .expect(404)
+          .end(function (err) {
+            assert.ifError(err);
+            assert(!fs.existsSync(tmpdir.join('3234ee470c8605a1837e08f218494326.js')));
+            done();
+          });
+        });
+      });
   });
 
   describe('playback', function () {
