@@ -2,7 +2,6 @@
 // Licensed under the terms of the MIT license. Please see LICENSE file in the project root for terms.
 
 var Promise = require('bluebird');
-var messageHash = require('incoming-message-hash');
 var assert = require('assert');
 var mkdirp = require('mkdirp');
 var path = require('path');
@@ -21,7 +20,7 @@ var debug = require('debug')('yakbak:server');
  * @returns {Function}
  */
 
-module.exports = function (host, opts) {
+module.exports = function(host, opts) {
   assert(opts.dirname, 'You must provide opts.dirname');
 
   return function (req, res) {
@@ -68,9 +67,9 @@ module.exports = function (host, opts) {
    */
 
   function tapename(req, body) {
-    var hash = opts.hash || messageHash.sync;
-
-    return hash(req, Buffer.concat(body)) + '.js';
+    let path = req.path.replace(/\//g, '_');
+    console.log(path);
+    return path + '.js';
   }
 
 };
