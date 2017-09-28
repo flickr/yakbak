@@ -11,9 +11,6 @@ var jsonData = "crap";
 <% }); -%>
  */
 
-<% 
-    fs.writeFileSync(data_file, body.toString(), 'utf8');
-%>
 module.exports = function (req, res) {
   res.statusCode = <%- JSON.stringify(res.statusCode) %>;
 
@@ -22,7 +19,7 @@ module.exports = function (req, res) {
 <% }); -%>
 
   res.setHeader("x-yakbak-tape", path.basename(__filename, ".js"));
-  
+
 <% 
       fs.readFile(data_file,'utf8', (err, data) =>{
         console.log(err);
@@ -30,7 +27,7 @@ module.exports = function (req, res) {
         jsonData = data; 
       });
 %>
-  res.send(<%- JSON.stringify(jsonData) %>);
+  res.send(<%- JSON.stringify(json_data) %>);
 
   res.end();
 

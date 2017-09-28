@@ -69,7 +69,7 @@ module.exports = function(host, opts) {
   function tapename(req, body) {
     let path = req.path.replace(/\//g, '_');
     console.log(path);
-    return path + '.js';
+    return path + '.js'; //look for json file
   }
 
 };
