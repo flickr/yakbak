@@ -1,8 +1,11 @@
 var path = require("path");
+var fs = require('fs');
+
 
 /**
  * <%- req.method %> <%- decodeURIComponent(req.path) %>
- *
+ * Filename: <%- data_file %>
+ * 
 <% Object.keys(req._headers).forEach(function (key) { -%>
  * <%- key %>: <%- req._headers[key].replace('/*', '/ *').replace('*/', '* /') %>
 <% }); -%>
@@ -17,9 +20,8 @@ module.exports = function (req, res) {
 
   res.setHeader("x-yakbak-tape", path.basename(__filename, ".js"));
 
-<% body.forEach(function (data) { -%>
-  res.write(new Buffer(<%- JSON.stringify(data.toString('base64')) %>, "base64"));
-<% }); -%>
+  res.send(fs.readFileSync('<%- data_file %>', 'utf8'));
+
   res.end();
 
   return __filename;
