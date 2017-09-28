@@ -51,7 +51,6 @@ module.exports = function(host, opts) {
     }).catch(RecordingDisabledError, function (err) {
       /* eslint-disable no-console */
       console.log('An HTTP request has been made that yakbak does not know how to handle');
-      console.log(curl.request(req));
       /* eslint-enable no-console */
       res.statusCode = err.status;
       res.end(err.message);
@@ -68,7 +67,6 @@ module.exports = function(host, opts) {
 
   function tapename(req, body) {
     let path = req.path.replace(/\//g, '_');
-    console.log(path);
     return path + '.js'; //look for json file
   }
 
