@@ -1,5 +1,5 @@
 var path = require("path");
-var jsonData = "crap";
+var fs = require('fs');
 
 
 /**
@@ -20,14 +20,7 @@ module.exports = function (req, res) {
 
   res.setHeader("x-yakbak-tape", path.basename(__filename, ".js"));
 
-<% 
-      fs.readFile(data_file,'utf8', (err, data) =>{
-        console.log(err);
-        console.log(data);
-        jsonData = data; 
-      });
-%>
-  res.send(<%- JSON.stringify(json_data) %>);
+  res.send(fs.readFileSync('<%- data_file %>', 'utf8'));
 
   res.end();
 
