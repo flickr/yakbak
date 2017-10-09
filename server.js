@@ -6,10 +6,6 @@ let services = yakbak('http://cst-dvweb-01.isqft.com/services', {
   dirname:  '/home/ubuntu/projects/mock-data/tapes',
 });
 
-let login = yakbak('http://cst-dvweb-01.isqft.com/login', {
-  dirname:  '/home/ubuntu/projects/mock-data/tapes',
-});
-
 const app = express();
 app.use(bodyParser.json());
 //app.use(bodyParser.urlencoded({extended: true}));

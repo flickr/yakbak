@@ -47,12 +47,16 @@ module.exports = function(host, opts) {
     }).then(function (file) {
       return require(file);
     }).then(function (tape) {
-      return tape(req, res);
+        return tape(req, res);
     }).catch(RecordingDisabledError, function (err) {
       /* eslint-disable no-console */
       console.log('An HTTP request has been made that yakbak does not know how to handle');
       /* eslint-enable no-console */
       res.statusCode = err.status;
+      res.end(err.message);
+    }).catch((err) =>  {
+       console.log('Some unexpected error occured');
+      res.statusCode = 500;
       res.end(err.message);
     });
 
