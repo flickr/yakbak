@@ -20,9 +20,8 @@ module.exports = function (req, res) {
 
   res.setHeader("x-yakbak-tape", path.basename(__filename, ".js"));
 
-  res.send(fs.readFileSync('<%- data_file %>', 'utf8'));
-
-  res.end();
-
+  fs.readFile('<%- data_file %>', 'utf8', function(err, data){
+      res.end(data);
+  });
   return __filename;
 };
