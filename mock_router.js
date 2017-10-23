@@ -7,11 +7,20 @@ const lookup = {
     dirname: '/home/ubuntu/projects/mock-data/tapes/solr',
   },
 
+  "//company/gcproject": {
+    target: 'http://dev-solr.bidclerk.com/gcproject',
+    dirname: '/home/ubuntu/projects/mock-data/tapes/solr',
+  },
+
+  "//company/subcontractor": {
+    target: 'http://dev-solr.bidclerk.com/subcontractor',
+    dirname: '/home/ubuntu/projects/mock-data/tapes/solr',
+  },
+
   "//company/select": {
     target: 'http://dev-solr.bidclerk.com/company',
     dirname: '/home/ubuntu/projects/mock-data/tapes/solr',
   },
-
   default: {
     target: 'http://cst-dvweb-01.isqft.com/services',
     dirname: '/home/ubuntu/projects/mock-data/tapes',
