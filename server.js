@@ -21,7 +21,7 @@ app.use(bodyParser.json());
 
 app.use(function (req, res, next) {
   if(req.path.includes('login')){
-    res.cookie('isqftAuth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJlbWFpbCI6InByZW1pdW0udGhyZWVAaXNxZnQuY29tIiwiaWF0IjoiMTUwNjYxOTU3Ni44MDM2NCIsImp0aSI6ImFhNzcyNWNjLTcxYWMtNDFlNy05ZTRiLTUzNzNiMTg1OTI0YiJ9.MVo4Da3d-MyZccxrmcz0rev2EOPosijH9TSIVdOiGchUDhPyJZY_gkv-k0k3hr-3d4Xwo7Vp8L6roGxdUmWF0g', {domain: ".isqft.com", expires: new Date(Date.now() + 30*24*60*60*60*1000), path: "/", httpOnly: true});
+    res.cookie('isqftAuth', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJlbWFpbCI6InByZW1pdW0udGhyZWVAaXNxZnQuY29tIiwiaWF0IjoiMTUwODc2NzA0NC44ODg3IiwianRpIjoiNzEzNDY0ZjMtOWE4Ni00ZjNiLTg1OWUtNWJiYWIxNGQ4NTE0In0.gEoaPhOqiqMftj6tRR4FKEb15c1BeB2i93PcOH_udIqKBR1gPtZy8m6EXduYYORhr1qHYW9MAVSjYaiSMQ7v7g', {domain: ".isqft.com", expires: new Date(Date.now() + 30*24*60*60*60*1000), path: "/", httpOnly: true});
     res.redirect('http://adil.isqft.com:5076');
   }
 
