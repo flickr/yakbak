@@ -55,7 +55,7 @@ module.exports = function(host, opts) {
       res.statusCode = err.status;
       res.end(err.message);
     }).catch((err) =>  {
-       console.log('Some unexpected error occured');
+       console.log('Some unexpected error occured', err.message);
       res.statusCode = 500;
       res.end(err.message);
     });
