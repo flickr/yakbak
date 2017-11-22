@@ -11,6 +11,7 @@ var proxy = require('./lib/proxy');
 var record = require('./lib/record');
 var curl = require('./lib/curl');
 var debug = require('debug')('yakbak:server');
+var fs = require('fs');
 
 /**
  * Returns a new yakbak proxy middleware.
@@ -33,7 +34,18 @@ module.exports = function (host, opts) {
       var file = path.join(opts.dirname, tapename(req, body));
 
       return Promise.try(function () {
-        return require.resolve(file);
+        const fileName = require.resolve(file);
+        
+        // If tape was deleted, then throw module not found error
+        // so that it can be re-recorded instead of failing on 
+        // require.
+        if (!fs.existsSync(fileName)) {
+          const err = new Error('File does not exist');
+          err.code = 'MODULE_NOT_FOUND';
+          throw err;
+        }
+
+        return fileName;
       }).catch(ModuleNotFoundError, function (/* err */) {
 
         if (opts.noRecord) {
