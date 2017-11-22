@@ -34,13 +34,13 @@ module.exports = function (host, opts) {
       var file = path.join(opts.dirname, tapename(req, body));
 
       return Promise.try(function () {
-        const fileName = require.resolve(file);
+        var fileName = require.resolve(file);
         
         // If tape was deleted, then throw module not found error
         // so that it can be re-recorded instead of failing on 
         // require.
         if (!fs.existsSync(fileName)) {
-          const err = new Error('File does not exist');
+          var err = new Error('File does not exist');
           err.code = 'MODULE_NOT_FOUND';
           throw err;
         }
