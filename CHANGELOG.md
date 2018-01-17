@@ -1,5 +1,19 @@
 # Change Log
 
+## Unreleased
+
+Nothing yet!
+
+## [3.0.0] - 2018-01-17
+
+This release is mainly to upgrade dependencies with security vulnerabilities. There are no yakbak API changes in this release, but if you were depending on global APIs of yakbak's dependencies (namely debug@2.x) you should check out those individual changelogs for details.
+
+### Changed
+
+- Upgrade [debug](https://github.com/visionmedia/debug) dependency. Version 3.0.0 contains [several breaking changes](https://github.com/visionmedia/debug/blob/master/CHANGELOG.md#300--2017-08-08) ([#42])
+- Upgrade [ejs](https://github.com/mde/ejs) dependency
+- Test against node 6/8/9
+
 ## [2.6.0] - 2017-05-03
 
 ### Added
@@ -26,8 +40,12 @@
 - Initial CHANGELOG.
 
 [2.4.3]: https://github.com/flickr/yakbak/compare/v2.4.2...v2.4.3
+[2.5.0]: https://github.com/flickr/yakbak/compare/v2.4.3...v2.5.0
+[2.6.0]: https://github.com/flickr/yakbak/compare/v2.5.0...v2.6.0
+[3.0.0]: https://github.com/flickr/yakbak/compare/v2.6.0...v3.0.0
 
 [#12]: https://github.com/flickr/yakbak/pull/12
 [#13]: https://github.com/flickr/yakbak/pull/13
 [#17]: https://github.com/flickr/yakbak/pull/17
 [#30]: https://github.com/flickr/yakbak/pull/30
+[#42]: https://github.com/flickr/yakbak/pull/42
