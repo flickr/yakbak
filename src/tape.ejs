@@ -1,8 +1,7 @@
-var path = require("path");
-
-<% function escapeComments(str) {
+<%_ function escapeComments(str) {
   return str.split('/*').join('/ *').split('*/').join('* /')
-} %>
+} _%>
+var path = require("path");
 
 /**
  * <%- req.method %> <%- escapeComments(decodeURIComponent(req.path)) %>
