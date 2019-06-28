@@ -24,9 +24,9 @@
   "author": "Jeremy Ruppel",
   "license": "MIT",
   "devDependencies": {
-    "eslint": "^2.9.0",
-    "eslint-config-flickr": "~1.1.7",
-    "mocha": "~2.3.4",
+    "eslint": "^4.18.2",
+    "eslint-config-flickr": "^2.0.1",
+    "mocha": "^6.1.4",
     "os-tmpdir": "^1.0.1",
     "rimraf": "^2.5.2",
     "semver": "^5.1.0",
