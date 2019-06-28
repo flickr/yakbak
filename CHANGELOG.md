@@ -51,7 +51,7 @@ This release is mainly to upgrade dependencies with security vulnerabilities. Th
 [2.5.0]: https://github.com/flickr/yakbak/compare/v2.4.3...v2.5.0
 [2.6.0]: https://github.com/flickr/yakbak/compare/v2.5.0...v2.6.0
 [3.0.0]: https://github.com/flickr/yakbak/compare/v2.6.0...v3.0.0
-[4.0.0]: https://github.com/flickr/yakbak/compare/v3.6.0...v4.0.0
+[4.0.0]: https://github.com/flickr/yakbak/compare/v3.0.0...v4.0.0
 
 [#12]: https://github.com/flickr/yakbak/pull/12
 [#13]: https://github.com/flickr/yakbak/pull/13
