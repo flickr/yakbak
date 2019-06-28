@@ -1,4 +1,4 @@
-// Copyright 2016 Yahoo Inc.
+// Copyright 2019 SmugMug, Inc.
 // Licensed under the terms of the MIT license. Please see LICENSE file in the project root for terms.
 
 /* eslint-env mocha */
@@ -41,6 +41,7 @@ describe('yakbak', function () {
         request(yakbak)
         .get('/record/1')
         .set('host', 'localhost:3001')
+        .set('user-agent', 'node-superagent/0.21.0')
         .expect('X-Yakbak-Tape', '1a574e91da6cf00ac18bc97abaed139e')
         .expect('Content-Type', 'text/html')
         .expect(201, 'OK')
@@ -55,6 +56,7 @@ describe('yakbak', function () {
         request(yakbak)
         .get('/record/2')
         .set('host', 'localhost:3001')
+        .set('user-agent', 'node-superagent/0.21.0')
         .expect('X-Yakbak-Tape', '3234ee470c8605a1837e08f218494326')
         .expect('Content-Type', 'text/html')
         .expect(201, 'OK')
@@ -88,6 +90,7 @@ describe('yakbak', function () {
           .query({ foo: 'bar' })
           .query({ date: new Date() }) // without the custom hash, this would always cause 404s
           .set('host', 'localhost:3001')
+          .set('user-agent', 'node-superagent/0.21.0')
           .expect('X-Yakbak-Tape', '3f142e515cb24d1af9e51e6869bf666f')
           .expect('Content-Type', 'text/html')
           .expect(201, 'OK')
@@ -109,6 +112,7 @@ describe('yakbak', function () {
         request(yakbak)
         .get('/record/2')
         .set('host', 'localhost:3001')
+        .set('user-agent', 'node-superagent/0.21.0')
         .expect(404)
         .end(done);
       });
@@ -117,6 +121,7 @@ describe('yakbak', function () {
         request(yakbak)
         .get('/record/2')
         .set('host', 'localhost:3001')
+        .set('user-agent', 'node-superagent/0.21.0')
         .end(function (err) {
           assert.ifError(err);
           assert.equal(server.requests.length, 0);
@@ -128,6 +133,7 @@ describe('yakbak', function () {
         request(yakbak)
         .get('/record/2')
         .set('host', 'localhost:3001')
+        .set('user-agent', 'node-superagent/0.21.0')
         .end(function (err) {
           assert.ifError(err);
           assert(!fs.existsSync(tmpdir.join('3234ee470c8605a1837e08f218494326.js')));
@@ -162,6 +168,7 @@ describe('yakbak', function () {
       request(yakbak)
       .get('/playback/1')
       .set('host', 'localhost:3001')
+      .set('user-agent', 'node-superagent/0.21.0')
       .expect('X-Yakbak-Tape', '305c77b0a3ad7632e51c717408d8be0f')
       .expect('Content-Type', 'text/html')
       .expect(201, 'YAY')
