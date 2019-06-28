@@ -30,7 +30,7 @@
     "os-tmpdir": "^1.0.1",
     "rimraf": "^2.5.2",
     "semver": "^5.1.0",
-    "supertest": "~0.15.0"
+    "supertest": "^4.0.2"
   },
   "dependencies": {
     "bluebird": "~3.3.4",
