@@ -6,6 +6,7 @@ var messageHash = require('incoming-message-hash');
 var assert = require('assert');
 var mkdirp = require('mkdirp');
 var path = require('path');
+var fs = require('fs');
 var buffer = require('./lib/buffer');
 var proxy = require('./lib/proxy');
 var record = require('./lib/record');
@@ -32,19 +33,18 @@ module.exports = function (host, opts) {
     return buffer(req).then(function (body) {
       var file = path.join(opts.dirname, tapename(req, body));
 
-      return Promise.try(function () {
-        return require.resolve(file);
-      }).catch(ModuleNotFoundError, function (/* err */) {
+      if (fs.existsSync(file)) {
+        return file;
+      }
 
-        if (opts.noRecord) {
-          throw new RecordingDisabledError('Recording Disabled');
-        } else {
-          return proxy(req, body, host).then(function (pres) {
-            return record(pres.req, pres, file);
-          });
-        }
+      if (opts.noRecord) {
+        throw new RecordingDisabledError('Recording Disabled');
+      }
 
+      return proxy(req, body, host).then(function (pres) {
+        return record(pres.req, pres, file);
       });
+
     }).then(function (file) {
       return require(file);
     }).then(function (tape) {
