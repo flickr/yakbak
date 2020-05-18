@@ -4,6 +4,10 @@
 
 Nothing yet!
 
+## [5.0.0] - 2020-05-18
+
+This release simply upgrades a bunch of devDependencies, but those upgrades meant we needed to drop support for node < 10. Currently 10 is the lowest active LTS anyways so it's for the best.
+
 ## [4.0.0] - 2019-06-28
 
 This release removes support for node < v6, mainly because our dev dependencies have done just that. Also we've got some new digs now so time to show it off in the copyright comments! 
@@ -52,6 +56,7 @@ This release is mainly to upgrade dependencies with security vulnerabilities. Th
 [2.6.0]: https://github.com/flickr/yakbak/compare/v2.5.0...v2.6.0
 [3.0.0]: https://github.com/flickr/yakbak/compare/v2.6.0...v3.0.0
 [4.0.0]: https://github.com/flickr/yakbak/compare/v3.0.0...v4.0.0
+[5.0.0]: https://github.com/flickr/yakbak/compare/v4.0.0...v5.0.0
 
 [#12]: https://github.com/flickr/yakbak/pull/12
 [#13]: https://github.com/flickr/yakbak/pull/13
