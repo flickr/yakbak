@@ -12,8 +12,8 @@ var path = require('path');
  * @returns {Object}
  */
 
-module.exports = function createTmpdir(done) {
-  return new Dir().setup(done);
+module.exports = function createTmpdir() {
+  return new Dir().setup();
 };
 
 function Dir() {
@@ -26,12 +26,12 @@ Dir.prototype.join = function (val) {
   return path.join(this.dirname, val);
 };
 
-Dir.prototype.setup = function (done) {
-  mkdirp(this.dirname, done);
+Dir.prototype.setup = function () {
+  mkdirp.sync(this.dirname);
   return this;
 };
 
-Dir.prototype.teardown = function (done) {
-  rimraf(this.dirname, done);
+Dir.prototype.teardown = function () {
+  rimraf.sync(this.dirname);
   return this;
 };

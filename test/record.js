@@ -23,12 +23,12 @@ describe('record', function () {
     server.teardown(done);
   });
 
-  beforeEach(function (done) {
-    tmpdir = createTmpdir(done);
+  beforeEach(function () {
+    tmpdir = createTmpdir();
   });
 
-  afterEach(function (done) {
-    tmpdir.teardown(done);
+  afterEach(function () {
+    tmpdir.teardown();
   });
 
   beforeEach(function () {

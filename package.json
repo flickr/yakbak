@@ -34,10 +34,10 @@
     "supertest": "^6.1.6"
   },
   "dependencies": {
-    "bluebird": "~3.3.4",
-    "debug": "^3.1.0",
-    "ejs": "^2.5.5",
+    "bluebird": "^3.7.2",
+    "debug": "^4.3.3",
+    "ejs": "^3.1.6",
     "incoming-message-hash": "^4.0.0",
-    "mkdirp": "^0.5.5"
+    "mkdirp": "^1.0.4"
   }
 }
