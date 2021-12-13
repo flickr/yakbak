@@ -4,6 +4,10 @@
 
 Nothing yet!
 
+## [5.0.1] - 2021-12-13
+
+This release simply upgrades a bunch of deps and devDeps [#60]. It also replaces Travis CI with GitHub Actions for CI [#59].
+
 ## [5.0.0] - 2020-05-18
 
 This release simply upgrades a bunch of devDependencies, but those upgrades meant we needed to drop support for node < 10. Currently 10 is the lowest active LTS anyways so it's for the best.
@@ -57,6 +61,7 @@ This release is mainly to upgrade dependencies with security vulnerabilities. Th
 [3.0.0]: https://github.com/flickr/yakbak/compare/v2.6.0...v3.0.0
 [4.0.0]: https://github.com/flickr/yakbak/compare/v3.0.0...v4.0.0
 [5.0.0]: https://github.com/flickr/yakbak/compare/v4.0.0...v5.0.0
+[5.0.1]: https://github.com/flickr/yakbak/compare/v5.0.0...v5.0.1
 
 [#12]: https://github.com/flickr/yakbak/pull/12
 [#13]: https://github.com/flickr/yakbak/pull/13
@@ -64,3 +69,5 @@ This release is mainly to upgrade dependencies with security vulnerabilities. Th
 [#30]: https://github.com/flickr/yakbak/pull/30
 [#42]: https://github.com/flickr/yakbak/pull/42
 [#50]: https://github.com/flickr/yakbak/pull/50
+[#59]: https://github.com/flickr/yakbak/pull/59
+[#60]: https://github.com/flickr/yakbak/pull/60
