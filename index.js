@@ -32,6 +32,8 @@ module.exports = function (host, opts) {
     return buffer(req).then(function (body) {
       var file = path.join(opts.dirname, tapename(req, body));
 
+      mkdirp.sync(path.dirname(file));
+
       return Promise.try(function () {
         return require.resolve(file);
       }).catch(ModuleNotFoundError, function (/* err */) {
