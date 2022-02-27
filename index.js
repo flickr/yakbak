@@ -18,6 +18,7 @@ var debug = require('debug')('yakbak:server');
  * @param {Object} opts
  * @param {String} opts.dirname The tapes directory
  * @param {Boolean} opts.noRecord if true, requests will return a 404 error if the tape doesn't exist
+ * @param {Boolean} opts.recordOnlySuccess if true, only successful requests will be recorded
  * @returns {Function}
  */
 
@@ -31,6 +32,7 @@ module.exports = function (host, opts) {
 
     return buffer(req).then(function (body) {
       var file = path.join(opts.dirname, tapename(req, body));
+      var successfulResCodePattern = /^[2][0|2][0-8]$/;
 
       return Promise.try(function () {
         return require.resolve(file);
@@ -40,7 +42,15 @@ module.exports = function (host, opts) {
           throw new RecordingDisabledError('Recording Disabled');
         } else {
           return proxy(req, body, host).then(function (pres) {
-            return record(pres.req, pres, file);
+            if (opts.recordOnlySuccess === true) {
+                if (successfulResCodePattern.test(pres.statusCode)) {
+                   return record(pres.req, pres, file);
+                } else {
+                  throw new RecordingDisabledError('Only Successful responses will be recorded');
+                }
+            } else {
+              return record(pres.req, pres, file);
+            }
           });
         }
 
@@ -51,7 +61,7 @@ module.exports = function (host, opts) {
       return tape(req, res);
     }).catch(RecordingDisabledError, function (err) {
       /* eslint-disable no-console */
-      console.log('An HTTP request has been made that yakbak does not know how to handle');
+      console.log(err.message);
       console.log(curl.request(req));
       /* eslint-enable no-console */
       res.statusCode = err.status;
@@ -87,7 +97,7 @@ function ModuleNotFoundError(err) {
 
 /**
  * Error class that is thrown when an unmatched request
- * is encountered in noRecord mode
+ * is encountered in noRecord mode or when a request failed in recordOnlySuccess mode
  * @constructor
  */
 
