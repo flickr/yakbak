@@ -1,10 +1,13 @@
+<%_ function escapeComments(str) {
+  return str.split('/*').join('/ *').split('*/').join('* /')
+} _%>
 var path = require("path");
 
 /**
- * <%- req.method %> <%- decodeURIComponent(req.path) %>
+ * <%- req.method %> <%- escapeComments(decodeURIComponent(req.path)) %>
  *
 <% Object.keys(req._headers).forEach(function (key) { -%>
- * <%- key %>: <%- req._headers[key].replace('/*', '/ *').replace('*/', '* /') %>
+ * <%- key %>: <%- escapeComments(req._headers[key]) %>
 <% }); -%>
  */
 
